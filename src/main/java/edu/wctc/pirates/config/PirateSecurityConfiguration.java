@@ -45,9 +45,12 @@ public class PirateSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .logout().permitAll();
         httpSecurity.csrf()
                 .ignoringAntMatchers("/h2-console/**");
-//        httpSecurity.headers()
-//                .frameOptions()
-//                .sameOrigin();
+
+        // To demonstrate a CSRF attack, disable protection
+        // Visit http://javapuppy.com/dist-java/totally-legit-page.html while logged in
+
+        // httpSecurity.csrf().disable();
+
     }
 
     public void configure(WebSecurity webSecurity) throws Exception {
