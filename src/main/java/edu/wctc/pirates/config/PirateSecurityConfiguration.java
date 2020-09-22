@@ -1,6 +1,5 @@
 package edu.wctc.pirates.config;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,11 +15,10 @@ import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
-@Slf4j
 public class PirateSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    DataSource dataSource;
+    private DataSource dataSource;
 
     @Bean
     public static PasswordEncoder passwordEncoder() {
@@ -35,25 +33,27 @@ public class PirateSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
+//        httpSecurity.authorizeRequests()
+//                .antMatchers("/").permitAll()
+//                .anyRequest().authenticated()
+//                .and()
+//                .formLogin();
+
         httpSecurity.authorizeRequests()
-                .antMatchers("/", "/h2-console/**", "/img/**", "/style/**").permitAll()
+                .antMatchers("/").permitAll()
                 .antMatchers("/training-report").hasAuthority("hr")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().loginPage("/login").permitAll()
                 .and()
                 .logout().permitAll();
-        httpSecurity.csrf()
-                .ignoringAntMatchers("/h2-console/**");
 
-        // To demonstrate a CSRF attack, disable protection
-        // Visit http://javapuppy.com/dist-java/totally-legit-page.html while logged in
-
+        // To demonstrate a CSRF attack, disable protection by uncommenting:
         // httpSecurity.csrf().disable();
-
+        // Then visit http://javapuppy.com/dist-java/totally-legit-page.html while logged in
     }
 
     public void configure(WebSecurity webSecurity) throws Exception {
-        webSecurity.ignoring().antMatchers("/resources/**");
+        webSecurity.ignoring().antMatchers("/h2-console/**", "/img/**", "/style/**");
     }
 }
